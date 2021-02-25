@@ -2,18 +2,19 @@
 const cards = createDeck();
 const cardsNumber = 54;
 const deck = new Deck(cards, cardsNumber);
-
+const shuffledTableDeck = createsTableDeck();
 const numberPlayerSelection = document.getElementById("number-of-players");
 const startButton = document.getElementById("start");
 let numberOfPlayers;
 const players = [];
 
 start.addEventListener("click", () => {
-    
   numberOfPlayers = numberPlayerSelection.value;
-  console.log(numberOfPlayers);
+  creatPlayers();
 });
 
+console.log(x);
+//creates a new deck
 function createDeck() {
   const deck = new Array();
 
@@ -26,11 +27,23 @@ function createDeck() {
   deck.push(new Card(null, 0, true));
   return deck;
 }
+
+//creates a shuffled new table Deck
+function createsTableDeck() {
+  const cards = createDeck();
+  const deckShuffle = new Deck(cards);
+  deckShuffle.shuffle();
+  return deckShuffle;
+}
+
 //creat an array of players
 function creatPlayers() {
   for (let i = 0; i < numberOfPlayers; i++) {
-    const playerDeck = new PlayerDeck(null);
-    const player = new Player(prompt(`player ${i + 1} name`), playerDeck);
+    const cards = [];
+    for (let i = 0; i < 5; i++) {
+        cards.push(shuffledTableDeck.pop());
+    }
+    const player = new Player(prompt(`player ${i + 1} name`), cards);
     players.push(player);
   }
 }

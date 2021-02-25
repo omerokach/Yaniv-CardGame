@@ -12,12 +12,12 @@ class Deck {
   }
   shuffle() {
     for (let i = 0; i < 1000; i++) {
-      let location1 = Math.floor(Math.random() * this.cards.length);
-      let location2 = Math.floor(Math.random() * this.cards.length);
-      let tmp = this.cards[location1];
+      let location1 = Math.floor(Math.random() * this.cardsArray.length);
+      let location2 = Math.floor(Math.random() * this.cardsArray.length);
+      let tmp = this.cardsArray[location1];
 
-      this.cards[location1] = this.cards[location2];
-      this.cards[location2] = tmp;
+      this.cardsArray[location1] = this.cardsArray[location2];
+      this.cardsArray[location2] = tmp;
     }
   }
 }
