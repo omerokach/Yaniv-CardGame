@@ -6,15 +6,18 @@ const tableDeck = createsTableDeck();
 const numberPlayerSelection = document.getElementById("number-of-players");
 const startButton = document.getElementById("start");
 const deckPile = document.getElementById("deck-pile");
-const tablePile = document.getElementById("mainTable")
+const tablePile = document.getElementById("mainTable");
+const players = document.querySelectorAll('.players');
 let numberOfPlayers;
-const players = [];
-
+const playersArray = [];
+console.log(players)
 start.addEventListener("click", () => {
   numberOfPlayers = numberPlayerSelection.value;
   creatPlayers();
+  console.log(playersArray);
   console.log(tableDeck.cardsArray.pop());
-  creatCardDiv(tableDeck.cardsArray.pop());
+  creatCardDiv(tableDeck.cardsArray.pop(), deckPile);
+  setCardsToPlayers();
 });
 
 //creates a new deck
@@ -47,12 +50,13 @@ function creatPlayers() {
       cards.push(tableDeck.cardsArray.pop());
     }
     const player = new Player(prompt(`player ${i + 1} name`), cards);
-    players.push(player);
+    playersArray.push(player);
   }
 }
 
 //creating a card div from card object
-function creatCardDiv(card) {
+function creatCardDiv(card, parent) {
+    console.log(parent)
   const { suit } = card;
   const { rank } = card;
   const { isJoker } = card;
@@ -64,5 +68,18 @@ function creatCardDiv(card) {
   } else {
     cardImg.src = `./imgs/cardsFront/${card.suit}_${card.rank}.png`;
   }
-  deckPile.appendChild(cardImg);
+  parent.appendChild(cardImg);
+}
+
+// set cards to player
+function setCardsToPlayers(){
+    let counter = 0;
+    for(player of playersArray) {
+        for(let i = 0 ;i<player.length; i++){
+            console.log(player.playerDeck[i]);
+            console.log(players[counter]);
+            creatCardDiv(player.playerDeck[i], players[counter])
+        }
+        counter++
+    }
 }

@@ -14,6 +14,11 @@ Img {
   height: 100%;
 }
 
+h1 {
+  position: relative;
+  left: 50%;
+}
+
 .board-container {
   -webkit-box-pack: space-evenly;
       -ms-flex-pack: space-evenly;
@@ -64,7 +69,7 @@ Img {
   grid-area: 3 / 1 / 11 / 4;
 }
 
-.board-container #you {
+.board-container #player1 {
   -ms-grid-row: 9;
   -ms-grid-row-span: 4;
   -ms-grid-column: 5;

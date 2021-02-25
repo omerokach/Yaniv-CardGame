@@ -11,6 +11,10 @@ Img {
   width: 50%;
   height: 100%;
 }
+h1{
+  position: relative;
+  left: 50%;
+}
 .board-container {
   justify-content: space-evenly;
   background-color: #a3ddcb;
@@ -38,7 +42,7 @@ Img {
   #player2 {
     grid-area: 3 / 1 / 11 / 4;
   }
-  #you {
+  #player1 {
     grid-area: 9 / 5 / 13 / 9;
   }
   #mainTable {
