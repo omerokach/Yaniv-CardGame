@@ -1,0 +1,81 @@
+.parent {
+  background-color: #a3ddcb;
+  text-align: center;
+  margin: auto;
+  width: 70vw;
+  height: 70vh;
+  max-height: 100%;
+  max-width: 100%;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[12];
+      grid-template-columns: repeat(12, 1fr);
+  -ms-grid-rows: (1fr)[12];
+      grid-template-rows: repeat(12, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+.parent .players {
+  border: solid black 1px;
+  margin: 1em;
+}
+
+.parent #player4 {
+  -ms-grid-row: 4;
+  -ms-grid-row-span: 5;
+  -ms-grid-column: 10;
+  -ms-grid-column-span: 3;
+  grid-area: 4 / 10 / 9 / 13;
+}
+
+.parent #player3 {
+  -ms-grid-row: 1;
+  -ms-grid-row-span: 3;
+  -ms-grid-column: 5;
+  -ms-grid-column-span: 4;
+  grid-area: 1 / 5 / 4 / 9;
+}
+
+.parent #player2 {
+  -ms-grid-row: 4;
+  -ms-grid-row-span: 5;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 3;
+  grid-area: 4 / 1 / 9 / 4;
+}
+
+.parent #you {
+  -ms-grid-row: 9;
+  -ms-grid-row-span: 4;
+  -ms-grid-column: 5;
+  -ms-grid-column-span: 4;
+  grid-area: 9 / 5 / 13 / 9;
+}
+
+.parent #utils-table {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -ms-grid-row: 5;
+  -ms-grid-row-span: 3;
+  -ms-grid-column: 5;
+  -ms-grid-column-span: 4;
+  grid-area: 5 / 5 / 8 / 9;
+}
+
+.parent #utils-table #deck-pile {
+  border: solid black 1px;
+}
+
+.parent #utils-table #table-pile {
+  border: solid black 1px;
+}
+
+.parent #utils-table #yaniv {
+  border: solid black 1px;
+}
+/*# sourceMappingURL=style.css.map */
