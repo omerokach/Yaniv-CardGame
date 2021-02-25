@@ -7,9 +7,8 @@ class Card {
 }
 
 class Deck {
-  constructor(cards, numberOfCards) {
-    this.numberOfCards = numberOfCards;
-    this.cards = cards;
+  constructor(cards) {
+    this.cardsArray = cards;
   }
   shuffle() {
     for (let i = 0; i < 1000; i++) {
@@ -24,24 +23,27 @@ class Deck {
 }
 
 class TableDeck extends Deck {
-  constructor(cards, numberOfCards) {
+  constructor(cards) {
     super();
-    this.cards = cards;
-    this.numberOfCards = numberOfCards;
+    this.cardsArray = cards;
   }
 }
 
 class PlayerDeck extends Deck {
-  constructor(cards, numberOfCards) {
+  constructor(cards) {
     super();
-    this.cards = cards;
-    this.numberOfCards = 5;
+    this.cardsArray = cards;
   }
 }
 class PileDeck extends Deck {
-  constructor(cards, numberOfCards) {
+  constructor(cards) {
     super();
-    this.cards = cards;
-    this.numberOfCards = numberOfCards;
+    this.cardsArray = cards;
+  }
+}
+class Player {
+  constructor(name, playerDeck) {
+    this.name = name;
+    this.playerDeck = playerDeck;
   }
 }
