@@ -5,7 +5,8 @@ const deck = new Deck(cards, cardsNumber);
 const tableDeck = createsTableDeck();
 const numberPlayerSelection = document.getElementById("number-of-players");
 const startButton = document.getElementById("start");
-const pileDeck = document.getElementById("deck-pile");
+const deckPile = document.getElementById("deck-pile");
+const tablePile = document.getElementById("mainTable")
 let numberOfPlayers;
 const players = [];
 
@@ -52,14 +53,16 @@ function creatPlayers() {
 
 //creating a card div from card object
 function creatCardDiv(card) {
-  const div = document.createElement("div");
   const { suit } = card;
   const { rank } = card;
   const { isJoker } = card;
+  const cardImg = document.createElement("img");
+  cardImg.setAttribute("id", `${suit}_${rank}`);
   if (isJoker) {
-    div.innerText = "Joker";
+      cardImg.setAttribute("id", `${suit}_${rank}`);
+      cardImg.setAttribute("id", `joker_joker`);
   } else {
-    div.innerText = suit + rank;
+    cardImg.src = `./imgs/cardsFront/${card.suit}_${card.rank}.png`;
   }
-  pileDeck.appendChild(div);
+  deckPile.appendChild(cardImg);
 }

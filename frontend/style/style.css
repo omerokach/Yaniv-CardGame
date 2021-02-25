@@ -1,4 +1,23 @@
+main {
+  position: relative;
+}
+
+#utils {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+Img {
+  margin: 0.2em;
+  width: 50%;
+  height: 100%;
+}
+
 .board-container {
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
   background-color: #a3ddcb;
   text-align: center;
   margin: auto;
@@ -22,11 +41,11 @@
 }
 
 .board-container #player4 {
-  -ms-grid-row: 4;
-  -ms-grid-row-span: 5;
+  -ms-grid-row: 3;
+  -ms-grid-row-span: 8;
   -ms-grid-column: 10;
   -ms-grid-column-span: 3;
-  grid-area: 4 / 10 / 9 / 13;
+  grid-area: 3 / 10 / 11 / 13;
 }
 
 .board-container #player3 {
@@ -38,11 +57,11 @@
 }
 
 .board-container #player2 {
-  -ms-grid-row: 4;
-  -ms-grid-row-span: 5;
+  -ms-grid-row: 3;
+  -ms-grid-row-span: 8;
   -ms-grid-column: 1;
   -ms-grid-column-span: 3;
-  grid-area: 4 / 1 / 9 / 4;
+  grid-area: 3 / 1 / 11 / 4;
 }
 
 .board-container #you {
@@ -53,29 +72,26 @@
   grid-area: 9 / 5 / 13 / 9;
 }
 
-.board-container #utils-table {
+.board-container #mainTable {
+  border: solid black 1px;
+  -ms-grid-row: 4;
+  -ms-grid-row-span: 5;
+  -ms-grid-column: 4;
+  -ms-grid-column-span: 6;
+  grid-area: 4 / 4 / 9 / 10;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  -ms-grid-row: 5;
-  -ms-grid-row-span: 3;
-  -ms-grid-column: 5;
-  -ms-grid-column-span: 4;
-  grid-area: 5 / 5 / 8 / 9;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
-.board-container #utils-table #deck-pile {
+.board-container #mainTable #yaniv {
   border: solid black 1px;
-}
-
-.board-container #utils-table #table-pile {
-  border: solid black 1px;
-}
-
-.board-container #utils-table #yaniv {
-  border: solid black 1px;
+  margin-right: 1em;
 }
 /*# sourceMappingURL=style.css.map */

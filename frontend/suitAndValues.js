@@ -1,6 +1,6 @@
 const suits = ["spades", "diamonds", "clubs", "hearts"];
 const values = [
-  "A",
+  "ace",
   "2",
   "3",
   "4",
@@ -10,8 +10,7 @@ const values = [
   "8",
   "9",
   "10",
-  "J",
-  "Q",
-  "K",
+  "jack",
+  "queen",
+  "King",
 ];
-
