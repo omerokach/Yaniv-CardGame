@@ -131,13 +131,11 @@ function toggleMark(element) {
 
 //check if you can pick the card
 function ifCanAddCardToMarkedArray(array, card){
-  const cardLastLetter = card.id[card.id.length-1];
+  const cardLastChar = card.id[card.id.length-1];
   for(let item of array){
-    const cardNameLength = item.id.length;
-    const value = item.id[cardNameLength -1];
-    if(value = cardLastLetter){
+    if(cardLastChar = item.id[item.id.length -1]){
       return true;
-    }
+    } else if ()
   }
 }
 
