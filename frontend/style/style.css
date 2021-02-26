@@ -8,7 +8,7 @@ main {
   left: 0;
 }
 
-Img {
+img {
   margin: 0.2em;
   width: 50%;
   height: 100%;
@@ -41,6 +41,12 @@ h1 {
 }
 
 .board-container .players {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   border: solid black 1px;
   margin: 1em;
 }
@@ -51,6 +57,12 @@ h1 {
   -ms-grid-column: 10;
   -ms-grid-column-span: 3;
   grid-area: 3 / 10 / 11 / 13;
+  display: inline-table;
+}
+
+.board-container #player4 img {
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
 }
 
 .board-container #player3 {
@@ -67,6 +79,12 @@ h1 {
   -ms-grid-column: 1;
   -ms-grid-column-span: 3;
   grid-area: 3 / 1 / 11 / 4;
+  display: inline-table;
+}
+
+.board-container #player2 img {
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
 }
 
 .board-container #player1 {

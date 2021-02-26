@@ -6,12 +6,12 @@ main {
   top: 0;
   left: 0;
 }
-Img {
+img {
   margin: 0.2em;
   width: 50%;
   height: 100%;
 }
-h1{
+h1 {
   position: relative;
   left: 50%;
 }
@@ -30,17 +30,27 @@ h1{
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   .players {
+    display: flex;
+    align-items: center;
     border: solid black 1px;
     margin: 1em;
   }
   #player4 {
     grid-area: 3 / 10 / 11 / 13;
+    display: inline-table;
+    img {
+      transform: rotate(90deg);
+    }
   }
   #player3 {
     grid-area: 1 / 5 / 4 / 9;
   }
   #player2 {
     grid-area: 3 / 1 / 11 / 4;
+    display: inline-table;
+    img {
+      transform: rotate(90deg);
+    }
   }
   #player1 {
     grid-area: 9 / 5 / 13 / 9;
