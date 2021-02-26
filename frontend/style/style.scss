@@ -10,13 +10,14 @@ img {
   margin: 0.2em;
   width: 50%;
   height: 100%;
+  display: block;
+  object-fit: cover;
 }
 h1 {
   position: relative;
   left: 50%;
 }
 .board-container {
-  justify-content: space-evenly;
   background-color: #a3ddcb;
   text-align: center;
   margin: auto;
@@ -32,13 +33,15 @@ h1 {
   .players {
     display: flex;
     align-items: center;
-    border: solid black 1px;
+    // border: solid black 1px;
     margin: 1em;
   }
   #player4 {
     grid-area: 3 / 10 / 11 / 13;
     display: inline-table;
     img {
+      max-height: 100%;
+      max-width: 100%;
       transform: rotate(90deg);
     }
   }
@@ -66,4 +69,7 @@ h1 {
       margin-right: 1em;
     }
   }
+}
+.marked{
+  opacity : 70%;
 }

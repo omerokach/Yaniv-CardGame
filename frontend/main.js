@@ -9,25 +9,43 @@ const deckPile = document.getElementById("deck-pile");
 const tablePile = document.getElementById("mainTable");
 const playersDOM = document.querySelectorAll(".players");
 const playerName = document.querySelectorAll(".playerName");
-let numberOfPlayers;
+const imgs = document.querySelectorAll("img");
+const deckPileArray = [];
 const playersArray = [];
+let marked = [];
+let numberOfPlayers;
+let currentPlayer = "";
+
+document.addEventListener("click", (e) => {
+  const card = e.target;
+  const playerNode = card.parentNode;
+  //checks if the click was on the currentPlayer
+  ifCanPick(card);
+  if (
+    card.parentNode.querySelector("span").innerText ===
+    playersArray[currentPlayer].name
+  ) {
+    toggleMark(card);
+  }
+  if (card.className === "player-card") {
+  }
+});
 
 start.addEventListener("click", () => {
   numberOfPlayers = numberPlayerSelection.value;
   creatPlayers();
-  console.log(playersArray);
-  console.log(tableDeck.cardsArray.pop());
-  creatCardDiv(tableDeck.cardsArray.pop(), deckPile);
-  console.log(playersArray);
+  deckPileArray.push(tableDeck.cardsArray.pop());
+  creatCardDiv(deckPileArray[0], deckPile, "deck-pile");
   setCardsToPlayers();
-  playersArray[0].sumPlayerScore();
-  console.log(playersArray[0].playerScore);
+  const randomNum = Math.floor(Math.random() * playersArray.length);
+  currentPlayerTurn(randomNum);
 });
+
+//=========================================================functions============================================================
 
 //creates a new deck
 function createDeck() {
   const deck = new Array();
-
   for (let i = 0; i < suits.length; i++) {
     for (let x = 0; x < values.length; x++) {
       deck.push(new Card(suits[i], values[x], false));
@@ -62,17 +80,21 @@ function creatPlayers() {
 }
 
 //creating a card div from card object
-function creatCardDiv(card, parent) {
+function creatCardDiv(card, parent, className) {
   const { suit } = card;
   const { rank } = card;
   const { isJoker } = card;
   const cardImg = document.createElement("img");
   cardImg.setAttribute("id", `${suit}_${rank}`);
+  cardImg.setAttribute("class", "player-card");
   if (isJoker) {
     cardImg.src = `./imgs/cardsFront/joker_red.png`;
-    cardImg.setAttribute("id", `joker_joker`);
+    cardImg.setAttribute("id", `joker_card`);
   } else {
     cardImg.src = `./imgs/cardsFront/${card.suit}_${card.rank}.png`;
+  }
+  if (className) {
+    cardImg.setAttribute("class", className);
   }
   parent.appendChild(cardImg);
 }
@@ -86,4 +108,57 @@ function setCardsToPlayers() {
     }
     counter++;
   }
+}
+
+//updating who's turn div
+function currentPlayerTurn(playerNum) {
+  currentPlayer = playerNum;
+  const currentPlayerDOM = document.querySelector(".currentPlayer");
+  currentPlayerDOM.innerText = `turn of: ${playersArray[playerNum].name}`;
+}
+
+//toggle mark function
+function toggleMark(element) {
+  if (element.classList.contains("marked")) {
+    element.classList.remove("marked");
+    marked = removeCardFromArray(marked, element);
+  } else {
+    element.classList.add("marked");
+    marked.push(element);
+  }
+  console.log(marked);
+}
+
+//check if you can pick the card
+function ifCanAddCardToMarkedArray(array, card){
+  const cardLastLetter = card.id[card.id.length-1];
+  for(let item of array){
+    const cardNameLength = item.id.length;
+    const value = item.id[cardNameLength -1];
+    if(value = cardLastLetter){
+      return true;
+    }
+  }
+}
+
+
+//if array has the card img
+function ifArrayHasCardImg(array, img) {
+  for (let card of array) {
+    if (card.id === img.id || card.id === `joker_card`) {
+      return true;
+    }
+  }
+  return false;
+}
+
+//removes specific img from array
+function removeCardFromArray(arr, card) {
+  const newArr = [];
+  for (let item of arr) {
+    if (item.id !== card.id) {
+      newArr.push(item);
+    }
+  }
+  return newArr;
 }
