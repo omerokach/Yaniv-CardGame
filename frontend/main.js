@@ -12,15 +12,17 @@ const playerName = document.querySelectorAll(".playerName");
 const imgs = document.querySelectorAll("img");
 const deckPileArray = [];
 const playersArray = [];
+let deckPileLastTurn = [];
 let marked = [];
+let demoMarked = [];
 let numberOfPlayers;
 let currentPlayer = "";
 
 document.addEventListener("click", (e) => {
   const card = e.target;
   const playerNode = card.parentNode;
+  console.log(card);
   //checks if the click was on the currentPlayer
-  ifCanPick(card);
   if (
     card.parentNode.querySelector("span").innerText ===
     playersArray[currentPlayer].name
@@ -122,23 +124,36 @@ function toggleMark(element) {
   if (element.classList.contains("marked")) {
     element.classList.remove("marked");
     marked = removeCardFromArray(marked, element);
-  } else {
+    demoMarked = removeCardFromArray(demoMarked, demo);
+  } else if (ifCanAddCardToMarkedArray(demoMarked, element)) {
     element.classList.add("marked");
+    demoMarked.push(element);
     marked.push(element);
   }
   console.log(marked);
 }
 
-//check if you can pick the card
-function ifCanAddCardToMarkedArray(array, card){
-  const cardLastChar = card.id[card.id.length-1];
-  for(let item of array){
-    if(cardLastChar = item.id[item.id.length -1]){
-      return true;
-    } else if ()
+// check if you can pick the card
+function ifCanAddCardToMarkedArray(array, card) {
+  const cardFirstCharAsSuit = card.id[0];
+  if (marked.length === 0) {
+    return true;
   }
+  for (let item of array) {
+    if (ifSameRank) {
+      return true;
+    } else if (marked.length !== 3) {
+      if (
+        cardFirstCharAsSuit === item.id[0] &&
+        (rankNumber(item) - 1 === rankNumber(card) ||
+          rankNumber(item) + 1 === rankNumber(card))
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
-
 
 //if array has the card img
 function ifArrayHasCardImg(array, img) {
@@ -160,3 +175,17 @@ function removeCardFromArray(arr, card) {
   }
   return newArr;
 }
+
+//check if the card has the same rank
+function ifSameRank(array, card) {
+  if (
+    rankNumber(array[0]) === rankNumber(card) ||
+    rankNumber(array[0]) === 0 ||
+    rankNumber(card) === 0
+  ) {
+    return true;
+  }
+}
+
+//check if the cards Consecutive
+function ifConsecutive(array, card) {}

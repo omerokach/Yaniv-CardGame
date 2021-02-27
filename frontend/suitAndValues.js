@@ -14,3 +14,67 @@ const values = [
   "queen",
   "King",
 ];
+
+//function that gives back the rank by the last char in the img id as number
+function rankNumber(cardImg) {
+  rank = cardImg.id[cardImg.id.length - 1];
+  switch (rank) {
+    case "e": {
+      rank = 1;
+      break;
+    }
+    case "2": {
+      rank = 2;
+      break;
+    }
+    case "3": {
+      rank = 3;
+      break;
+    }
+    case "4": {
+      rank = 4;
+      break;
+    }
+    case "5": {
+      rank = 5;
+      break;
+    }
+    case "6": {
+      rank = 6;
+      break;
+    }
+    case "7": {
+      rank = 7;
+      break;
+    }
+    case "8": {
+      rank = 8;
+      break;
+    }
+    case "9": {
+      rank = 9;
+      break;
+    }
+    case "10": {
+      rank = 10;
+      break;
+    }
+    case "k": {
+      rank = 11;
+      break;
+    }
+    case "n": {
+      rank = 12;
+      break;
+    }
+    case "g": {
+      rank = 13;
+      break;
+    }
+    case "d": {
+      rank = 0;
+      break;
+    }
+  }
+  return rank;
+}
