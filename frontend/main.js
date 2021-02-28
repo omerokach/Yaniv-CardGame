@@ -13,15 +13,13 @@ const imgs = document.querySelectorAll("img");
 const deckPileArray = [];
 const playersArray = [];
 let deckPileLastTurn = [];
-let marked = [];
-let demoMarked = [];
+let marked = { markedArray: [], markedStatus: "" };
 let numberOfPlayers;
 let currentPlayer = "";
 
 document.addEventListener("click", (e) => {
   const card = e.target;
   const playerNode = card.parentNode;
-  console.log(card);
   //checks if the click was on the currentPlayer
   if (
     card.parentNode.querySelector("span").innerText ===
@@ -38,7 +36,7 @@ start.addEventListener("click", () => {
   creatPlayers();
   deckPileArray.push(tableDeck.cardsArray.pop());
   creatCardDiv(deckPileArray[0], deckPile, "deck-pile");
-  setCardsToPlayers();
+  setCardsToPlayers(playersArray);
   const randomNum = Math.floor(Math.random() * playersArray.length);
   currentPlayerTurn(randomNum);
 });
@@ -102,9 +100,9 @@ function creatCardDiv(card, parent, className) {
 }
 
 // set cards to player
-function setCardsToPlayers() {
+function setCardsToPlayers(array) {
   let counter = 0;
-  for (let player of playersArray) {
+  for (let player of array) {
     for (let i = 0; i < player.playerDeck.length; i++) {
       creatCardDiv(player.playerDeck[i], playersDOM[counter]);
     }
@@ -123,31 +121,31 @@ function currentPlayerTurn(playerNum) {
 function toggleMark(element) {
   if (element.classList.contains("marked")) {
     element.classList.remove("marked");
-    marked = removeCardFromArray(marked, element);
-    demoMarked = removeCardFromArray(demoMarked, demo);
-  } else if (ifCanAddCardToMarkedArray(demoMarked, element)) {
+    marked.markedStatus = "";
+    marked.markedArray = removeCardFromArray(marked.markedArray, element);
+  } else if (ifCanAddCardToMarkedArray(marked.markedArray, element)) {
     element.classList.add("marked");
-    demoMarked.push(element);
-    marked.push(element);
+    marked.markedArray.push(element);
   }
   console.log(marked);
 }
 
 // check if you can pick the card
 function ifCanAddCardToMarkedArray(array, card) {
-  const cardFirstCharAsSuit = card.id[0];
-  if (marked.length === 0) {
+  if (marked.markedArray.length === 0) {
     return true;
   }
   for (let item of array) {
-    if (ifSameRank) {
+    if (
+      ifSameRank(marked.markedArray, card) &&
+      (marked.markedStatus === "same rank" || marked.markedStatus === "")
+    ) {
       return true;
-    } else if (marked.length !== 3) {
-      if (
-        cardFirstCharAsSuit === item.id[0] &&
-        (rankNumber(item) - 1 === rankNumber(card) ||
-          rankNumber(item) + 1 === rankNumber(card))
-      ) {
+    } else if (
+      ifConsecutive(marked.markedArray, card) &&
+      (marked.markedStatus === "consecutive" || marked.markedStatus === "")
+    ) {
+      {
         return true;
       }
     }
@@ -178,14 +176,62 @@ function removeCardFromArray(arr, card) {
 
 //check if the card has the same rank
 function ifSameRank(array, card) {
-  if (
-    rankNumber(array[0]) === rankNumber(card) ||
-    rankNumber(array[0]) === 0 ||
-    rankNumber(card) === 0
-  ) {
+  let rank = 0;
+  for (let card of array) {
+    if (rankNumber(card) !== 0) {
+      rank = rankNumber(card);
+    }
+  }
+  if (rank === rankNumber(card)) {
+    marked.markedStatus = "same rank";
     return true;
   }
+  return false;
 }
 
 //check if the cards Consecutive
-function ifConsecutive(array, card) {}
+function ifConsecutive(array, card) {
+  const numSortArr = [];
+  const sortedArray = [];
+  // build an array of the ranks of the array
+  for (let card of array) {
+    numSortArr.push(rankNumber(card));
+  }
+  numSortArr.sort((a, b) => a - b);
+  //build an sorted array of cards by rank array
+  for (let i = 0; i < array.length; i++) {
+    if (rankNumber(array[i]) === numSortArr[i]) {
+      sortedArray.push(array[i]);
+    }
+  }
+  console.log(rankNumber(card));
+  console.log(sortedArray[sortedArray.length - 1].id[0]);
+  if (
+    sortedArray[sortedArray.length - 1].id[0] === card.id[0] ||
+    rankNumber(card) === 0 ||
+    rankNumber(sortedArray[sortedArray.length - 1]) === 0
+  ) {
+    console.log("pass");
+    if (
+      rankNumber(card) - rankNumber(sortedArray[sortedArray.length - 1]) ===
+        1 ||
+      rankNumber(card) - rankNumber(sortedArray[sortedArray.length - 1]) ===
+        rankNumber(card) ||
+      rankNumber(card) - rankNumber(sortedArray[sortedArray.length - 1]) < 0
+    ) {
+      marked.markedStatus = "consecutive";
+      return true;
+    }
+  }
+  return false;
+}
+
+//check if has joker
+function ifHasJoker(array) {
+  for (let card of array) {
+    if (rankNumber(card) === 0) {
+      return true;
+    }
+  }
+  return false;
+}

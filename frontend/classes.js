@@ -49,7 +49,7 @@ class Player {
   }
   sumPlayerScore() {
     let sum = 0;
-    for (let card of this.playerDeck) {
+    for (let card of this.playerDeck.cards) {
       let rank = card.rank;
       switch (rank) {
         case "ace": {
