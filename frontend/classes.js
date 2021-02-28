@@ -26,6 +26,7 @@ class TableDeck extends Deck {
   constructor(cards) {
     super();
     this.cardsArray = cards;
+    
   }
 }
 

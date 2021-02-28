@@ -12,14 +12,14 @@ const playerName = document.querySelectorAll(".playerName");
 const imgs = document.querySelectorAll("img");
 const deckPileArray = [];
 const playersArray = [];
-let deckPileLastTurn = [];
 let marked = { markedArray: [], markedStatus: "" };
+let lastDrop = [];
 let numberOfPlayers;
 let currentPlayer = "";
 
 document.addEventListener("click", (e) => {
   const card = e.target;
-  const playerNode = card.parentNode;
+  const parentNode = card.parentNode;
   //checks if the click was on the currentPlayer
   if (
     card.parentNode.querySelector("span").innerText ===
@@ -27,7 +27,19 @@ document.addEventListener("click", (e) => {
   ) {
     toggleMark(card);
   }
-  if (card.className === "player-card") {
+});
+
+tablePile.addEventListener("click", (e) => {
+  const card = e.target;
+  const parentNode = card.parentNode;
+  //if clicked on the table-pile or the deck pile after picking his cards
+  if (parentNode.id === "table-pile" && marked.markedArray.length !== 0) {
+    if (card.className === "table-pile") {
+      lastDrop = popAndTakeByDrop(marked.markedArray);
+      deckPileArray.push(lastDrop);
+      playerDrop(playersArray[currentPlayer].playerDeck);
+      playersArray[currentPlayer].playerDeck.push(tableDeck.pop());
+    }
   }
 });
 
@@ -35,6 +47,7 @@ start.addEventListener("click", () => {
   numberOfPlayers = numberPlayerSelection.value;
   creatPlayers();
   deckPileArray.push(tableDeck.cardsArray.pop());
+  lastDrop = [...deckPileArray];
   creatCardDiv(deckPileArray[0], deckPile, "deck-pile");
   setCardsToPlayers(playersArray);
   const randomNum = Math.floor(Math.random() * playersArray.length);
@@ -51,8 +64,8 @@ function createDeck() {
       deck.push(new Card(suits[i], values[x], false));
     }
   }
-  deck.push(new Card(null, "0", true));
-  deck.push(new Card(null, "0", true));
+  deck.push(new Card(null, 0, true));
+  deck.push(new Card(null, 0, true));
   return deck;
 }
 
@@ -121,7 +134,9 @@ function currentPlayerTurn(playerNum) {
 function toggleMark(element) {
   if (element.classList.contains("marked")) {
     element.classList.remove("marked");
-    marked.markedStatus = "";
+    if (marked.markedArray.length === 1) {
+      marked.markedStatus = "";
+    }
     marked.markedArray = removeCardFromArray(marked.markedArray, element);
   } else if (ifCanAddCardToMarkedArray(marked.markedArray, element)) {
     element.classList.add("marked");
@@ -132,23 +147,18 @@ function toggleMark(element) {
 
 // check if you can pick the card
 function ifCanAddCardToMarkedArray(array, card) {
-  if (marked.markedArray.length === 0) {
+  if (array.length === 0) {
     return true;
   }
-  for (let item of array) {
-    if (
-      ifSameRank(marked.markedArray, card) &&
-      (marked.markedStatus === "same rank" || marked.markedStatus === "")
-    ) {
-      return true;
-    } else if (
-      ifConsecutive(marked.markedArray, card) &&
-      (marked.markedStatus === "consecutive" || marked.markedStatus === "")
-    ) {
-      {
-        return true;
-      }
-    }
+  console.log(marked.markedStatus);
+  if (
+    ifConsecutive(array, card) &&
+    marked.markedStatus === "consecutive" &&
+    (!ifSameRank(array, card) || rankNumber(card) === 0)
+  ) {
+    return true;
+  } else if (ifSameRank(array, card) && marked.markedStatus === "same-rank") {
+    return true;
   }
   return false;
 }
@@ -183,7 +193,7 @@ function ifSameRank(array, card) {
     }
   }
   if (rank === rankNumber(card)) {
-    marked.markedStatus = "same rank";
+    marked.markedStatus = "same-rank";
     return true;
   }
   return false;
@@ -198,6 +208,7 @@ function ifConsecutive(array, card) {
     numSortArr.push(rankNumber(card));
   }
   numSortArr.sort((a, b) => a - b);
+
   //build an sorted array of cards by rank array
   for (let i = 0; i < array.length; i++) {
     if (rankNumber(array[i]) === numSortArr[i]) {
@@ -212,6 +223,8 @@ function ifConsecutive(array, card) {
     rankNumber(sortedArray[sortedArray.length - 1]) === 0
   ) {
     console.log("pass");
+    console.log(rankNumber(card));
+    console.log(rankNumber(sortedArray[sortedArray.length - 1]));
     if (
       rankNumber(card) - rankNumber(sortedArray[sortedArray.length - 1]) ===
         1 ||
@@ -226,12 +239,20 @@ function ifConsecutive(array, card) {
   return false;
 }
 
-//check if has joker
-function ifHasJoker(array) {
-  for (let card of array) {
-    if (rankNumber(card) === 0) {
-      return true;
+//last drop takes all the pop from marked
+function popAndTakeByDrop(arr) {
+  const TemLastDrop = [];
+  for (let i = 0; i < arr.length; i++) {
+    TemLastDrop.push(arr.pop);
+  }
+  return TemLastDrop;
+}
+
+//removing the cards from player after play
+function playerDrop(arr) {
+  for (let card of arr) {
+    if (lastDrop.contains(card)) {
+      arr.pop();
     }
   }
-  return false;
 }
