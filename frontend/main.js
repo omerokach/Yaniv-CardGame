@@ -6,7 +6,7 @@ const tableDeck = createsTableDeck();
 const numberPlayerSelection = document.getElementById("number-of-players");
 const startButton = document.getElementById("start");
 const deckPile = document.getElementById("deck-pile");
-const tablePile = document.getElementById("mainTable");
+const tablePile = document.getElementById("table-pile");
 const playersDOM = document.querySelectorAll(".players");
 const playerName = document.querySelectorAll(".playerName");
 const imgs = document.querySelectorAll("img");
@@ -30,16 +30,20 @@ document.addEventListener("click", (e) => {
 });
 
 tablePile.addEventListener("click", (e) => {
+  console.log(playersArray[currentPlayer].playerDeck);
   const card = e.target;
   const parentNode = card.parentNode;
   //if clicked on the table-pile or the deck pile after picking his cards
-  if (parentNode.id === "table-pile" && marked.markedArray.length !== 0) {
-    if (card.className === "table-pile") {
-      lastDrop = popAndTakeByDrop(marked.markedArray);
-      deckPileArray.push(lastDrop);
-      playerDrop(playersArray[currentPlayer].playerDeck);
-      playersArray[currentPlayer].playerDeck.push(tableDeck.pop());
-    }
+  if (marked.markedArray.length !== 0) {
+    console.log("pass");
+    console.log(card);
+    lastDrop = [...popAndTakeByDrop(marked.markedArray)];
+    console.log(lastDrop);
+    deckPileArray.push(lastDrop);
+    console.log(deckPileArray);
+    playerDrop(playersArray[currentPlayer].playerDeck);
+    playersArray[currentPlayer].playerDeck.push(tableDeck.cardsArray.pop());
+    console.log(playersArray[currentPlayer].playerDeck);
   }
 });
 
@@ -138,7 +142,7 @@ function toggleMark(element) {
       marked.markedStatus = "";
     }
     marked.markedArray = removeCardFromArray(marked.markedArray, element);
-  } else if (ifCanAddCardToMarkedArray(marked.markedArray, element)) {
+  } else if (ifCanAddCardToMarkedArray(marked, element)) {
     element.classList.add("marked");
     marked.markedArray.push(element);
   }
@@ -146,18 +150,21 @@ function toggleMark(element) {
 }
 
 // check if you can pick the card
-function ifCanAddCardToMarkedArray(array, card) {
-  if (array.length === 0) {
+function ifCanAddCardToMarkedArray(marked, card) {
+  if (marked.markedArray.length === 0) {
     return true;
   }
   console.log(marked.markedStatus);
   if (
-    ifConsecutive(array, card) &&
+    ifConsecutive(marked.markedArray, card) &&
     marked.markedStatus === "consecutive" &&
-    (!ifSameRank(array, card) || rankNumber(card) === 0)
+    (!ifSameRank(marked.markedArray, card) || rankNumber(card) === 0)
   ) {
     return true;
-  } else if (ifSameRank(array, card) && marked.markedStatus === "same-rank") {
+  } else if (
+    ifSameRank(marked.markedArray, card) &&
+    marked.markedStatus === "same-rank"
+  ) {
     return true;
   }
   return false;
@@ -215,8 +222,6 @@ function ifConsecutive(array, card) {
       sortedArray.push(array[i]);
     }
   }
-  console.log(rankNumber(card));
-  console.log(sortedArray[sortedArray.length - 1].id[0]);
   if (
     sortedArray[sortedArray.length - 1].id[0] === card.id[0] ||
     rankNumber(card) === 0 ||
@@ -243,7 +248,7 @@ function ifConsecutive(array, card) {
 function popAndTakeByDrop(arr) {
   const TemLastDrop = [];
   for (let i = 0; i < arr.length; i++) {
-    TemLastDrop.push(arr.pop);
+    TemLastDrop.push(imgToObject(arr.pop()));
   }
   return TemLastDrop;
 }
@@ -251,8 +256,17 @@ function popAndTakeByDrop(arr) {
 //removing the cards from player after play
 function playerDrop(arr) {
   for (let card of arr) {
-    if (lastDrop.contains(card)) {
-      arr.pop();
+    if (lastDrop.includes(card)) {
+      removeCardFromArray(arr, card);
     }
+  }
+}
+
+//transform img tag to card object
+function imgToObject(img){
+  if(findSuit === 'joker'){
+    card = new Card(findSuit, rankNumber(img), true);
+  }else{
+    card = new Card(findSuit, rankNumber(img), false);
   }
 }

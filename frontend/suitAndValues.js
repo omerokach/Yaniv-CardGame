@@ -78,3 +78,30 @@ function rankNumber(cardImg) {
   }
   return rank;
 }
+//function that gives back the rank by the last char in the img id as number
+function findSuit(cardImg) {
+  suit = cardImg.id[0];
+  switch (suit) {
+    case "c": {
+      suit = "clubs";
+      break;
+    }
+    case "d": {
+      suit = "diamonds";
+      break;
+    }
+    case "h": {
+      suit = "hearts";
+      break;
+    }
+    case "j": {
+      suit = "joker";
+      break;
+    }
+    case "s": {
+      suit = "spades";
+      break;
+    }
+  }
+  return suit;
+}
