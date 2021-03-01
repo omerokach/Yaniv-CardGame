@@ -55,7 +55,7 @@ function rankNumber(cardImg) {
       rank = 9;
       break;
     }
-    case "10": {
+    case "0": {
       rank = 10;
       break;
     }
@@ -104,4 +104,62 @@ function findSuit(cardImg) {
     }
   }
   return suit;
+}
+function rankStrToNum(str) {
+  let numStr = str;
+  switch (numStr) {
+    case "2": {
+      numStr = 2;
+      break;
+    }
+    case "3": {
+      numStr = 3;
+      break;
+    }
+    case "4": {
+      numStr = 4;
+      break;
+    }
+    case "5": {
+      numStr = 5;
+      break;
+    }
+    case "6": {
+      numStr = 6;
+      break;
+    }
+    case "7": {
+      numStr = 7;
+      break;
+    }
+    case "8": {
+      numStr = 8;
+      break;
+    }
+    case "9": {
+      numStr = 9;
+      break;
+    }
+    case "10": {
+      numStr = 10;
+      break;
+    }
+    case "ace": {
+      numStr = 1;
+      break;
+    }
+    case "jack": {
+      numStr = 11;
+      break;
+    }
+    case "queen": {
+      numStr = 12;
+      break;
+    }
+    case "King": {
+      numStr = 13;
+      break;
+    }
+  }
+  return numStr;
 }

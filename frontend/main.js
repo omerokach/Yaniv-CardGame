@@ -1,4 +1,3 @@
-// creates new deck of cards and assigns it to deck object
 const cards = createDeck();
 const cardsNumber = 54;
 const deck = new Deck(cards, cardsNumber);
@@ -24,56 +23,53 @@ document.addEventListener("click", (e) => {
   if (
     card.parentNode.querySelector("span").innerText ===
     playersArray[currentPlayer].name
-  ) {
-    toggleMark(card);
-  }
-});
-
-tablePile.addEventListener("click", (e) => {
-  console.log(playersArray[currentPlayer].playerDeck);
-  const card = e.target;
-  const parentNode = card.parentNode;
-  //if clicked on the table-pile or the deck pile after picking his cards
-  if (marked.markedArray.length !== 0) {
-    console.log("pass");
-    console.log(card);
-    lastDrop = [...popAndTakeByDrop(marked.markedArray)];
-    console.log(lastDrop);
-    deckPileArray.push(lastDrop);
-    console.log(deckPileArray);
-    playerDrop(playersArray[currentPlayer].playerDeck);
-    playersArray[currentPlayer].playerDeck.push(tableDeck.cardsArray.pop());
-    console.log(playersArray[currentPlayer].playerDeck);
-  }
-});
-
-start.addEventListener("click", () => {
-  numberOfPlayers = numberPlayerSelection.value;
-  creatPlayers();
-  deckPileArray.push(tableDeck.cardsArray.pop());
-  lastDrop = [...deckPileArray];
-  creatCardDiv(deckPileArray[0], deckPile, "deck-pile");
-  setCardsToPlayers(playersArray);
-  const randomNum = Math.floor(Math.random() * playersArray.length);
-  currentPlayerTurn(randomNum);
-});
-
-//=========================================================functions============================================================
-
-//creates a new deck
-function createDeck() {
-  const deck = new Array();
-  for (let i = 0; i < suits.length; i++) {
-    for (let x = 0; x < values.length; x++) {
-      deck.push(new Card(suits[i], values[x], false));
+    ) {
+      toggleMark(card);
     }
+  });
+  
+  tablePile.addEventListener("click", (e) => {
+    const card = e.target;
+    const parentNode = card.parentNode;
+    //if clicked on the table-pile or the deck pile after picking his cards
+    if (marked.markedArray.length !== 0) {
+      lastDrop = [...popAndTakeByDrop(marked.markedArray)];
+      // console.log(lastDrop);
+      deckPileArray.push(...lastDrop);
+      // console.log(deckPileArray);
+      playersArray[currentPlayer].playerDeck = [...playerDrop(playersArray[currentPlayer].playerDeck)];
+      playersArray[currentPlayer].playerDeck.push(tableDeck.cardsArray.pop());
+      // console.log(playersArray[currentPlayer]);
+    }
+  });
+  
+  start.addEventListener("click", () => {
+    numberOfPlayers = numberPlayerSelection.value;
+    creatPlayers();
+    deckPileArray.push(tableDeck.cardsArray.pop());
+    lastDrop = [...deckPileArray];
+    creatCardDiv(deckPileArray[0], deckPile, "deck-pile");
+    setCardsToPlayers(playersArray);
+    const randomNum = Math.floor(Math.random() * playersArray.length);
+    currentPlayerTurn(randomNum);
+  });
+  
+  //=========================================================functions============================================================
+  
+  //creates a new deck
+  function createDeck() {
+    const deck = new Array();
+    for (let i = 0; i < suits.length; i++) {
+      for (let x = 0; x < values.length; x++) {
+        deck.push(new Card(suits[i], (values[x]), false));
+      }
+    }
+    deck.push(new Card(null, 0, true));
+    deck.push(new Card(null, 0, true));
+    return deck;
   }
-  deck.push(new Card(null, 0, true));
-  deck.push(new Card(null, 0, true));
-  return deck;
-}
-
-//creates a shuffled new table Deck
+  
+  //creates a shuffled new table Deck
 function createsTableDeck() {
   const cards = createDeck();
   const deckShuffle = new Deck(cards);
@@ -146,7 +142,7 @@ function toggleMark(element) {
     element.classList.add("marked");
     marked.markedArray.push(element);
   }
-  console.log(marked);
+  // console.log(marked);
 }
 
 // check if you can pick the card
@@ -154,7 +150,7 @@ function ifCanAddCardToMarkedArray(marked, card) {
   if (marked.markedArray.length === 0) {
     return true;
   }
-  console.log(marked.markedStatus);
+  // console.log(marked.markedStatus);
   if (
     ifConsecutive(marked.markedArray, card) &&
     marked.markedStatus === "consecutive" &&
@@ -182,12 +178,17 @@ function ifArrayHasCardImg(array, img) {
 
 //removes specific img from array
 function removeCardFromArray(arr, card) {
-  const newArr = [];
+  let newArr = [];
   for (let item of arr) {
-    if (item.id !== card.id) {
+    // console.log("start");
+    // console.log("item", item);
+    // console.log("card", card);
+    if (!compareObjects(item, card)) {
+      console.log("added");
       newArr.push(item);
     }
   }
+  console.log(newArr)
   return newArr;
 }
 
@@ -227,9 +228,6 @@ function ifConsecutive(array, card) {
     rankNumber(card) === 0 ||
     rankNumber(sortedArray[sortedArray.length - 1]) === 0
   ) {
-    console.log("pass");
-    console.log(rankNumber(card));
-    console.log(rankNumber(sortedArray[sortedArray.length - 1]));
     if (
       rankNumber(card) - rankNumber(sortedArray[sortedArray.length - 1]) ===
         1 ||
@@ -247,7 +245,7 @@ function ifConsecutive(array, card) {
 //last drop takes all the pop from marked
 function popAndTakeByDrop(arr) {
   const TemLastDrop = [];
-  for (let i = 0; i < arr.length; i++) {
+  for (let i = 0; i <= arr.length; i++) {
     TemLastDrop.push(imgToObject(arr.pop()));
   }
   return TemLastDrop;
@@ -255,18 +253,39 @@ function popAndTakeByDrop(arr) {
 
 //removing the cards from player after play
 function playerDrop(arr) {
+  let newArr = [];
   for (let card of arr) {
-    if (lastDrop.includes(card)) {
-      removeCardFromArray(arr, card);
+    for(let cardDrop of lastDrop){
+      if (compareObjects(cardDrop, card)) {
+        console.log("card", card)
+        newArr = removeCardFromArray(arr, card);
+      }
     }
   }
+  console.log(newArr)
+  return newArr;
 }
 
 //transform img tag to card object
 function imgToObject(img){
-  if(findSuit === 'joker'){
-    card = new Card(findSuit, rankNumber(img), true);
+  let card;
+  if(findSuit(img) === 'joker'){
+     card = new Card(findSuit(img), rankNumber(img), true);
   }else{
-    card = new Card(findSuit, rankNumber(img), false);
+     card = new Card(findSuit(img), rankNumber(img), false);
   }
+  return card;
+}
+
+//function that compare between two objects
+function compareObjects(cardObj1, cardObj2){
+  console.log("cardObj1.rank", rankStrToNum(cardObj1.rank))
+  console.log("rankStrToNum(cardObj2.rank)", rankStrToNum(cardObj2.rank))
+  console.log("cardObj1.suit", cardObj1.suit)
+  console.log("cardObj2.suit",cardObj2.suit)
+  if(cardObj1.rank === rankStrToNum(cardObj2.rank) && cardObj1.suit === cardObj2.suit){
+    console.log("true")
+      return true
+    }
+  return false;
 }
