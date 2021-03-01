@@ -163,3 +163,61 @@ function rankStrToNum(str) {
   }
   return numStr;
 }
+function rankIntToStr(int) {
+  let numStr = int;
+  switch (numStr) {
+    case 2: {
+      numStr = "2";
+      break;
+    }
+    case 3: {
+      numStr = "3";
+      break;
+    }
+    case 4: {
+      numStr = "4";
+      break;
+    }
+    case 5: {
+      numStr = "5";
+      break;
+    }
+    case 6: {
+      numStr = "6";
+      break;
+    }
+    case 7: {
+      numStr = "7";
+      break;
+    }
+    case 8: {
+      numStr = "8";
+      break;
+    }
+    case 9: {
+      numStr = "9";
+      break;
+    }
+    case 10: {
+      numStr = "10";
+      break;
+    }
+    case 1: {
+      numStr = "ace";
+      break;
+    }
+    case 11: {
+      numStr = "jack";
+      break;
+    }
+    case 12: {
+      numStr = "queen";
+      break;
+    }
+    case 13: {
+      numStr = "king";
+      break;
+    }
+  }
+  return numStr;
+}

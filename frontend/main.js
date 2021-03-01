@@ -9,67 +9,84 @@ const tablePile = document.getElementById("table-pile");
 const playersDOM = document.querySelectorAll(".players");
 const playerName = document.querySelectorAll(".playerName");
 const imgs = document.querySelectorAll("img");
+const yanivButton = document.getElementById("yaniv");
 const deckPileArray = [];
 const playersArray = [];
 let marked = { markedArray: [], markedStatus: "" };
 let lastDrop = [];
 let numberOfPlayers;
-let currentPlayer = "";
+let currentPlayer = 1;
 
 document.addEventListener("click", (e) => {
   const card = e.target;
   const parentNode = card.parentNode;
   //checks if the click was on the currentPlayer
   if (
-    card.parentNode.querySelector("span").innerText ===
+    parentNode.querySelector("span").innerText ===
     playersArray[currentPlayer].name
-    ) {
-      toggleMark(card);
-    }
-  });
-  
-  tablePile.addEventListener("click", (e) => {
-    const card = e.target;
-    const parentNode = card.parentNode;
-    //if clicked on the table-pile or the deck pile after picking his cards
-    if (marked.markedArray.length !== 0) {
-      lastDrop = [...popAndTakeByDrop(marked.markedArray)];
-      // console.log(lastDrop);
-      deckPileArray.push(...lastDrop);
-      // console.log(deckPileArray);
-      playersArray[currentPlayer].playerDeck = [...playerDrop(playersArray[currentPlayer].playerDeck)];
-      playersArray[currentPlayer].playerDeck.push(tableDeck.cardsArray.pop());
-      // console.log(playersArray[currentPlayer]);
-    }
-  });
-  
-  start.addEventListener("click", () => {
-    numberOfPlayers = numberPlayerSelection.value;
-    creatPlayers();
-    deckPileArray.push(tableDeck.cardsArray.pop());
-    lastDrop = [...deckPileArray];
-    creatCardDiv(deckPileArray[0], deckPile, "deck-pile");
-    setCardsToPlayers(playersArray);
-    const randomNum = Math.floor(Math.random() * playersArray.length);
-    currentPlayerTurn(randomNum);
-  });
-  
-  //=========================================================functions============================================================
-  
-  //creates a new deck
-  function createDeck() {
-    const deck = new Array();
-    for (let i = 0; i < suits.length; i++) {
-      for (let x = 0; x < values.length; x++) {
-        deck.push(new Card(suits[i], (values[x]), false));
-      }
-    }
-    deck.push(new Card(null, 0, true));
-    deck.push(new Card(null, 0, true));
-    return deck;
+  ) {
+    toggleMark(card);
   }
-  
-  //creates a shuffled new table Deck
+});
+
+tablePile.addEventListener("click", (e) => {
+  const card = e.target;
+  const parentNode = card.parentNode;
+  //if clicked on the table-pile or the deck pile after picking his cards
+  if (marked.markedArray.length !== 0) {
+    lastDrop = [...popAndTakeByDrop(marked.markedArray)];
+    deckPileArray.push(...lastDrop);
+    playersArray[currentPlayer].playerDeck = [
+      ...playerDrop(playersArray[currentPlayer].playerDeck),
+    ];
+    playersArray[currentPlayer].playerDeck.push(tableDeck.cardsArray.pop());
+    console.log(playersArray[currentPlayer]);
+    removeAndAddCardDiv(playersArray[currentPlayer], lastDrop);
+    console.log("player length", playersArray.length);
+    if (playersArray.length - currentPlayer === 1) {
+      currentPlayer = 0;
+    } else {
+      currentPlayer++;
+    }
+    currentPlayerTurn(currentPlayer);
+  }
+});
+
+start.addEventListener("click", () => {
+  console.log(tableDeck);
+  numberOfPlayers = numberPlayerSelection.value;
+  creatPlayers();
+  deckPileArray.push(tableDeck.cardsArray.pop());
+  lastDrop = [...deckPileArray];
+  creatCardDiv(deckPileArray[0], deckPile, "deck-pile");
+  setCardsToPlayers(playersArray);
+  const randomNum = Math.floor(Math.random() * playersArray.length);
+  currentPlayerTurn(randomNum);
+  console.log(tableDeck);
+});
+
+yanivButton.addEventListener("click", () => {
+  if (playersArray.forEach((player) => ifYaniv(player))) {
+    alert("Yaniv!!!!");
+  }
+});
+
+//=========================================================functions============================================================
+
+//creates a new deck
+function createDeck() {
+  const deck = new Array();
+  for (let i = 0; i < suits.length; i++) {
+    for (let x = 0; x < values.length; x++) {
+      deck.push(new Card(suits[i], values[x], false));
+    }
+  }
+  deck.push(new Card(null, 0, true));
+  deck.push(new Card(null, 0, true));
+  return deck;
+}
+
+//creates a shuffled new table Deck
 function createsTableDeck() {
   const cards = createDeck();
   const deckShuffle = new Deck(cards);
@@ -87,7 +104,7 @@ function creatPlayers() {
     const player = new Player(prompt(`player ${i + 1} name`), cards);
     playersArray.push(player);
     for (let i = 0; i < playersArray.length; i++) {
-      playerName[i].innerHTML = playersArray[i].name;
+      playerName[i].innerText = playersArray[i].name;
     }
   }
 }
@@ -95,7 +112,8 @@ function creatPlayers() {
 //creating a card div from card object
 function creatCardDiv(card, parent, className) {
   const { suit } = card;
-  const { rank } = card;
+  const rank = rankIntToStr(card.rank);
+  console.log(rank);
   const { isJoker } = card;
   const cardImg = document.createElement("img");
   cardImg.setAttribute("id", `${suit}_${rank}`);
@@ -104,12 +122,35 @@ function creatCardDiv(card, parent, className) {
     cardImg.src = `./imgs/cardsFront/joker_red.png`;
     cardImg.setAttribute("id", `joker_card`);
   } else {
-    cardImg.src = `./imgs/cardsFront/${card.suit}_${card.rank}.png`;
+    cardImg.src = `./imgs/cardsFront/${card.suit}_${rank}.png`;
   }
   if (className) {
     cardImg.setAttribute("class", className);
   }
   parent.appendChild(cardImg);
+}
+
+//remove card img div
+function removeAndAddCardDiv(player, cards) {
+  let playerIndex = playersArray.indexOf(player) + 1;
+  let playerDiv = document.querySelector(`#player${playerIndex}`);
+  let markedImgs = document.querySelectorAll(".marked");
+  for (var child of markedImgs) {
+    for (let card of cards) {
+      let cardRankStr = rankIntToStr(card.rank);
+      console.log(cardRankStr);
+      if (card.suit === "joker") {
+        cardToRemove = document.getElementById(`joker_card`);
+      }
+      console.log(`${card.suit}_${cardRankStr}`);
+      cardToRemove = document.getElementById(`${card.suit}_${cardRankStr}`);
+      if (child === cardToRemove || cardToRemove === null) {
+        child.remove();
+      }
+    }
+  }
+  console.log(cards);
+  creatCardDiv(tableDeck.cardsArray.pop(), playerDiv);
 }
 
 // set cards to player
@@ -125,6 +166,7 @@ function setCardsToPlayers(array) {
 
 //updating who's turn div
 function currentPlayerTurn(playerNum) {
+  console.log(playerNum);
   currentPlayer = playerNum;
   const currentPlayerDOM = document.querySelector(".currentPlayer");
   currentPlayerDOM.innerText = `turn of: ${playersArray[playerNum].name}`;
@@ -142,7 +184,6 @@ function toggleMark(element) {
     element.classList.add("marked");
     marked.markedArray.push(element);
   }
-  // console.log(marked);
 }
 
 // check if you can pick the card
@@ -150,7 +191,6 @@ function ifCanAddCardToMarkedArray(marked, card) {
   if (marked.markedArray.length === 0) {
     return true;
   }
-  // console.log(marked.markedStatus);
   if (
     ifConsecutive(marked.markedArray, card) &&
     marked.markedStatus === "consecutive" &&
@@ -180,15 +220,10 @@ function ifArrayHasCardImg(array, img) {
 function removeCardFromArray(arr, card) {
   let newArr = [];
   for (let item of arr) {
-    // console.log("start");
-    // console.log("item", item);
-    // console.log("card", card);
-    if (!compareObjects(item, card)) {
-      console.log("added");
+    if (!compareObjects(card, item)) {
       newArr.push(item);
     }
   }
-  console.log(newArr)
   return newArr;
 }
 
@@ -216,7 +251,6 @@ function ifConsecutive(array, card) {
     numSortArr.push(rankNumber(card));
   }
   numSortArr.sort((a, b) => a - b);
-
   //build an sorted array of cards by rank array
   for (let i = 0; i < array.length; i++) {
     if (rankNumber(array[i]) === numSortArr[i]) {
@@ -255,37 +289,40 @@ function popAndTakeByDrop(arr) {
 function playerDrop(arr) {
   let newArr = [];
   for (let card of arr) {
-    for(let cardDrop of lastDrop){
+    for (let cardDrop of lastDrop) {
       if (compareObjects(cardDrop, card)) {
-        console.log("card", card)
         newArr = removeCardFromArray(arr, card);
       }
     }
   }
-  console.log(newArr)
   return newArr;
 }
 
 //transform img tag to card object
-function imgToObject(img){
+function imgToObject(img) {
   let card;
-  if(findSuit(img) === 'joker'){
-     card = new Card(findSuit(img), rankNumber(img), true);
-  }else{
-     card = new Card(findSuit(img), rankNumber(img), false);
+  if (findSuit(img) === "joker") {
+    card = new Card(findSuit(img), rankNumber(img), true);
+  } else {
+    card = new Card(findSuit(img), rankNumber(img), false);
   }
   return card;
 }
 
 //function that compare between two objects
-function compareObjects(cardObj1, cardObj2){
-  console.log("cardObj1.rank", rankStrToNum(cardObj1.rank))
-  console.log("rankStrToNum(cardObj2.rank)", rankStrToNum(cardObj2.rank))
-  console.log("cardObj1.suit", cardObj1.suit)
-  console.log("cardObj2.suit",cardObj2.suit)
-  if(cardObj1.rank === rankStrToNum(cardObj2.rank) && cardObj1.suit === cardObj2.suit){
-    console.log("true")
-      return true
+function compareObjects(cardObj1, cardObj2) {
+  if (cardObj1.suit === cardObj2.suit) {
+    if (rankStrToNum(cardObj1.rank) === rankStrToNum(cardObj2.rank)) {
+      return true;
     }
+  }
+  return false;
+}
+
+//check if the player score is 7 or under
+function ifYaniv(player) {
+  if (player.sumPlayerScore() === 7 || player.sumPlayerScore() < 7) {
+    return true;
+  }
   return false;
 }
