@@ -66,8 +66,8 @@ start.addEventListener("click", () => {
 });
 
 yanivButton.addEventListener("click", () => {
-  if (playersArray.forEach((player) => ifYaniv(player))) {
-    alert("Yaniv!!!!");
+  if(playersArray[currentPlayer].sumPlayerScore() > 7){
+    
   }
 });
 
@@ -130,7 +130,7 @@ function creatCardDiv(card, parent, className) {
   parent.appendChild(cardImg);
 }
 
-//remove card img div
+//remove card img div from his parent
 function removeAndAddCardDiv(player, cards) {
   let playerIndex = playersArray.indexOf(player) + 1;
   let playerDiv = document.querySelector(`#player${playerIndex}`);

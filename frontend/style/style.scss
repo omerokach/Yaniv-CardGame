@@ -1,3 +1,6 @@
+*{
+  box-sizing: border-box;
+}
 main {
   position: relative;
 }
@@ -37,8 +40,6 @@ h1 {
     max-height: 200px;
     // border: solid black 1px;
     margin: 1em;  
-    img
-  }
   #player4 {
     grid-area: 3 / 10 / 11 / 13;
     display: inline-table;

@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 main {
   position: relative;
 }
@@ -10,8 +13,8 @@ main {
 
 img {
   margin: 0.2em;
-  max-width: 40%;
-  max-height: 70%;
+  max-width: 47%;
+  max-height: 45%;
   display: block;
   -o-object-fit: cover;
   object-fit: cover;
@@ -81,7 +84,7 @@ h1 {
   -ms-grid-column: 1;
   -ms-grid-column-span: 3;
   grid-area: 3 / 1 / 11 / 4;
-  display:table-cell;
+  display: table-cell;
   wrap: wrap;
 }
 
